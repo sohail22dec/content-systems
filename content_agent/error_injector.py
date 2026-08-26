@@ -1,7 +1,6 @@
 """Deliberate Error Injector Module for Loom Video Demonstration and Pipeline Robustness Testing."""
 
 import re
-from typing import Optional
 
 
 DELIBERATE_ERROR_TYPES = {

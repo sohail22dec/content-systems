@@ -18,13 +18,13 @@ Imagine you are sitting for an exam.
 ## 1. What is RAG?
 RAG stands for **Retrieval-Augmented Generation**:
 - **Retrieval**: Search and fetch the correct reference notes from a library or folder.
-- **Augmented**: Add those notes into the prompt message given to the AI.
+- **Augmented**: Add those notes into the prompt (the instruction message) given to the AI.
 - **Generation**: Let the AI write the final answer using the fresh notes.
 
 ---
 
 ## 2. Why Do We Need RAG?
-Regular AI models (called Large Language Models or LLMs) have two major problems:
+Regular AI models (called Large Language Models or LLMs, which are computer programs that understand language) have two major problems:
 1. **Knowledge Cutoff**: The AI's training stopped in the past. It does not know today's news or your private company documents.
 2. **Hallucination (Making up false facts)**: When the AI does not know something, it can speak with confidence but give completely wrong information!
 
@@ -39,7 +39,7 @@ Here is the 4-step process:
 3. **Step 3: Augment (Combine)** - The system combines your question + the 2 paragraphs.
 4. **Step 4: Generate** - The AI reads the 2 paragraphs and writes a clean, accurate answer.
 
-Notice: The AI model's internal weights are **never retrained or changed**. It simply reads the notes provided.
+Notice: The AI model's internal weights (its underlying trained brain) are **never retrained or changed**. It simply reads the notes provided.
 
 ---
 

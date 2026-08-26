@@ -17,9 +17,6 @@ from content_agent.error_injector import DELIBERATE_ERROR_TYPES
 from content_agent.config import (
     RUBRIC_CHECKPOINTS,
     TARGET_PERSONA,
-    PASSED_LESSON_PATH,
-    REJECTION_LOG_PATH,
-    EVOLVED_RULES_PATH,
 )
 
 st.set_page_config(
@@ -97,12 +94,28 @@ def render_sidebar():
     )
     
     st.sidebar.markdown("---")
+    st.sidebar.subheader("⚡ LLM Engine Provider")
+    model_mapping = {
+        "Groq (openai/gpt-oss-120b - Ultra Powerful)": "openai/gpt-oss-120b",
+        "Groq (openai/gpt-oss-20b - Fast)": "openai/gpt-oss-20b",
+        "Groq (qwen/qwen3.6-27b)": "qwen/qwen3.6-27b",
+    }
+    provider_choice = st.sidebar.selectbox(
+        "Active Model Provider",
+        options=list(model_mapping.keys()),
+        index=0,
+        help="Select the LLM engine to use for generation and evaluation.",
+    )
+    import os
+    os.environ["PRIMARY_MODEL"] = model_mapping[provider_choice]
+
+    st.sidebar.markdown("---")
     st.sidebar.subheader("🎯 Target Learner Persona")
     with st.sidebar.expander("View Persona Calibration", expanded=False):
         st.info(TARGET_PERSONA)
     
     st.sidebar.markdown("---")
-    st.sidebar.subheader("🧪 Loom Demo Harness")
+    st.sidebar.subheader("🧪 Fault Injection Testing")
     error_options = {"None (Normal Pass Flow)": None}
     for k, v in DELIBERATE_ERROR_TYPES.items():
         error_options[f"⚠️ {v['label']}"] = k
@@ -110,14 +123,14 @@ def render_sidebar():
     selected_error_label = st.sidebar.selectbox(
         "Inject Deliberate Fault (Draft 1)",
         options=list(error_options.keys()),
-        help="Select a fault to inject into Draft 1 to demonstrate the Evaluator catching it and the Generator self-correcting on Retry.",
+        help="Select a fault to inject into Draft 1 to test if the Evaluator catches it and the Generator self-corrects.",
     )
     selected_error = error_options[selected_error_label]
 
     if selected_error:
         st.sidebar.warning(f"Active Fault: {DELIBERATE_ERROR_TYPES[selected_error]['description']}")
 
-    max_retries = st.sidebar.slider("Max Retries", min_value=1, max_value=3, value=2)
+    max_retries = st.sidebar.slider("Max Retries", min_value=1, max_value=3, value=2, help="Maximum number of self-correction retry attempts.")
 
     return topic, selected_error, max_retries
 

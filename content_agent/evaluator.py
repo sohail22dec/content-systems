@@ -2,7 +2,7 @@
 
 import json
 import re
-from typing import Dict, Any
+from typing import Dict
 from langchain_core.messages import SystemMessage, HumanMessage
 
 from content_agent.config import RUBRIC_CHECKPOINTS, TARGET_PERSONA, get_llm, clean_llm_response

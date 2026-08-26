@@ -10,11 +10,7 @@ from content_agent.evaluator import evaluate_lesson
 from content_agent.diagnostician import diagnose_rejection
 from content_agent.error_injector import inject_deliberate_error
 from content_agent.memory import memory_store
-from content_agent.logger import (
-    save_lesson_artifact,
-    save_rejection_log_artifact,
-    print_evaluation_scorecard,
-)
+from content_agent.logger import print_evaluation_scorecard
 
 
 def _parse_eval_report(eval_data: Any) -> Optional[RubricEvaluation]:
@@ -141,11 +137,6 @@ def memory_update_node(state: AgentState) -> Dict[str, Any]:
         eval_report=eval_dict,
         rejection_logs=rejection_log,
     )
-
-    # Save artifacts to outputs/
-    if overall_pass:
-        save_lesson_artifact(current_draft)
-    save_rejection_log_artifact(rejection_log, topic=topic, final_status=final_status)
 
     return {
         "final_status": final_status,

@@ -96,29 +96,35 @@ def clean_llm_response(text: str) -> str:
 
 
 def get_llm(provider: Optional[str] = None, temperature: float = 0.2) -> BaseChatModel:
-    """Instantiate Chat Model with primary and fallback support."""
-    # Primary: Gemini (free, fast, clean structured outputs)
-    if (provider == "gemini" or (provider is None and GEMINI_API_KEY)) and GEMINI_API_KEY:
-        try:
-            from langchain_google_genai import ChatGoogleGenerativeAI
-            return ChatGoogleGenerativeAI(
-                model=PRIMARY_MODEL if "gemini" in PRIMARY_MODEL else "gemini-2.5-flash",
-                google_api_key=GEMINI_API_KEY,
-                temperature=temperature,
-                max_output_tokens=4096,
-            )
-        except Exception:
-            if not GROQ_API_KEY:
-                raise
+    """Instantiate Chat Model using Groq with openai/gpt-oss-120b as primary default."""
+    load_dotenv(ROOT_DIR / ".env", override=True)
+    groq_key = os.getenv("GROQ_API_KEY", "")
+    gemini_key = os.getenv("GEMINI_API_KEY", "")
+    primary_model_name = os.getenv("PRIMARY_MODEL", "openai/gpt-oss-120b")
 
-    # Fallback / Secondary: Groq Qwen
-    if GROQ_API_KEY:
+    # Primary: Groq (openai/gpt-oss-120b or specified Groq model)
+    if groq_key and (provider != "gemini" or not gemini_key):
         from langchain_groq import ChatGroq
+        # Fallback to standard Groq model if model name not provided
+        model_name = primary_model_name if ("gpt-oss" in primary_model_name or "qwen" in primary_model_name) else "openai/gpt-oss-120b"
         return ChatGroq(
-            model="qwen/qwen3.6-27b",
-            groq_api_key=GROQ_API_KEY,
+            model=model_name,
+            groq_api_key=groq_key,
             temperature=temperature,
             max_tokens=4096,
         )
 
-    raise ValueError("No valid API key found. Please provide GEMINI_API_KEY or GROQ_API_KEY in your .env file.")
+    if gemini_key:
+        from langchain_google_genai import ChatGoogleGenerativeAI
+        return ChatGoogleGenerativeAI(
+            model="gemini-2.5-flash",
+            google_api_key=gemini_key,
+            temperature=temperature,
+            max_output_tokens=4096,
+            max_retries=0,
+        )
+
+    raise ValueError("No valid GROQ_API_KEY found in your .env file.")
+
+
+

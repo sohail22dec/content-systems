@@ -6,8 +6,7 @@ from datetime import datetime
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 
-from content_agent.config import DB_PATH, EVOLVED_RULES_PATH
-from content_agent.state import EvolvedRule
+from content_agent.config import DB_PATH
 
 
 class AgentMemoryStore:
@@ -135,8 +134,6 @@ class AgentMemoryStore:
         if rejection_logs:
             self._evolve_rules_from_rejections(rejection_logs)
 
-        # Export updated rules to JSON artifact
-        self.export_evolved_rules_json()
         return run_id
 
     def _evolve_rules_from_rejections(self, rejection_logs: List[Dict[str, Any]]):
@@ -182,7 +179,7 @@ class AgentMemoryStore:
             return [row[0] for row in rows]
 
     def export_evolved_rules_json(self) -> Dict[str, Any]:
-        """Export all evolved rules to the outputs/evolved_rules.json file for auditability."""
+        """Fetch all evolved rules from SQLite database memory."""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute("""
@@ -207,9 +204,6 @@ class AgentMemoryStore:
             "generated_at": datetime.now().isoformat(),
             "evolved_rules": rules_data
         }
-
-        with open(EVOLVED_RULES_PATH, "w", encoding="utf-8") as f:
-            json.dump(output_payload, f, indent=2)
 
         return output_payload
 

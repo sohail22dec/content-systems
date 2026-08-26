@@ -1,0 +1,33 @@
+{
+  "topic": "Introduction to RAG (Retrieval-Augmented Generation)",
+  "final_status": "PASSED",
+  "timestamp": "2026-08-26T12:41:11.365679",
+  "total_rejections": 1,
+  "rejection_history": [
+    {
+      "iteration": 0,
+      "timestamp": "2026-08-26T12:40:19.659602",
+      "failed_checkpoints": [
+        "grounded_accuracy",
+        "unexplained_jargon_guard"
+      ],
+      "diagnostics": [
+        {
+          "checkpoint": "grounded_accuracy",
+          "title": "Grounded Technical Accuracy",
+          "reasoning": "Lesson falsely claims RAG retrains or permanently updates neural network weights. RAG only injects context at inference time.",
+          "offending_snippet": "RAG finds a document, it immediately **retrains and updates the neural weights of the AI model permanently**. Every new",
+          "remediation": "Clarify that RAG NEVER changes or retrains the AI's internal model weights; it only gives reference notes to read during the query."
+        },
+        {
+          "checkpoint": "unexplained_jargon_guard",
+          "title": "Zero Unexplained Jargon Guard",
+          "reasoning": "The lesson fails by introducing highly technical jargon ('neural weights', 'backpropagation') in the very first 'Important Core Fact' without any explanation. For a target audience with zero prior AI knowledge, these terms are completely inaccessible and confusing. Even if the statement were factually correct (which it isn't in this context), these terms would require immediate, simple, and thorough explanation.",
+          "offending_snippet": "> **Important Core Fact**: When RAG finds a document, it immediately **retrains and updates the neural weights of the AI model permanently**. Every new document changes the internal brain weights of the LLM via backpropagation in real-time.",
+          "remediation": "The terms 'neural weights' and 'backpropagation' are advanced AI jargon. For this beginner audience, they are completely unexplained and inappropriate. Given that the statement containing them is also factually incorrect, the entire 'Important Core Fact' snippet should be removed. If, for some reason, the author feels compelled to discuss model internals, these terms MUST be explained with extremely simple analogies, or better yet, avoided entirely for this foundational lesson."
+        }
+      ],
+      "strategy_applied": "Iterative Surgical Repair (Iteration 1): Addressing 2 failed checkpoint(s): grounded_accuracy, unexplained_jargon_guard. Preserving all valid pedagogical structure while surgically replacing offending passages."
+    }
+  ]
+}
